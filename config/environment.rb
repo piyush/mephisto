@@ -84,7 +84,8 @@ Rails::Initializer.run do |config|
   config.gem 'will_paginate', :version => '>= 2.2.2'
   config.gem 'mocha', :version => '>= 0.9.3'
   config.gem 'coderay', :version => '>= 0.8.260'
-  # config.gem 'emk-safe_erb', :version => '>= 0.1.2', :lib => 'safe_erb',
+  # Once I get safe-erb working on rails 2.3 i'll uncomment this
+  # config.gem 'samgranieri-safe_erb', :version => '>= 0.1.2', :lib => 'safe_erb',
   #            :source => 'http://gems.github.com'
 end
 
