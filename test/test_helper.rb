@@ -97,7 +97,7 @@ class ActiveSupport::TestCase
   end
 
   def assert_event_created(mode)
-    assert_difference Event, :count do
+    assert_difference 'Event.count' do
       event = yield
       assert_equal mode, event.mode
     end
@@ -112,11 +112,11 @@ class ActiveSupport::TestCase
   end
 
   def assert_no_event_created
-    assert_no_difference(Event, :count) { yield }
+    assert_no_difference('Event.count') { yield }
   end
 
   def assert_attachment_created(num = 1)
-    assert_difference Attachment, :count, num do
+    assert_difference 'Attachment.count', num do
       yield
     end
   end
