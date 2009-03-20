@@ -17,13 +17,13 @@ class ActionController::Dispatcher
     Mephisto.liquid_tags.each { |name, klass| Liquid::Template.register_tag name, klass }
   end
   
-  def cleanup_application_with_plugins
-    returning cleanup_application_without_plugins do
-      self.class.register_liquid_tags
-    end
-  end
-  
-  alias_method_chain :cleanup_application, :plugins
+  # def cleanup_application_with_plugins
+  #   returning cleanup_application_without_plugins do
+  #     self.class.register_liquid_tags
+  #   end
+  # end
+  # 
+  # alias_method_chain :cleanup_application, :plugins
 end
 
 ActionController::Dispatcher.register_liquid_tags
