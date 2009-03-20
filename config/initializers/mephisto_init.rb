@@ -17,6 +17,7 @@ class ActionController::Dispatcher
     Mephisto.liquid_tags.each { |name, klass| Liquid::Template.register_tag name, klass }
   end
   
+  #TODO: Get this working with Rails 2.3...
   # def cleanup_application_with_plugins
   #   returning cleanup_application_without_plugins do
   #     self.class.register_liquid_tags
