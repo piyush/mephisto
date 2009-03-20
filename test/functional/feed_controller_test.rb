@@ -1,17 +1,8 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-# Re-raise errors caught by the controller.
-class FeedController; def rescue_action(e) raise e end; end
-
-class FeedControllerTest < Test::Unit::TestCase
+class FeedControllerTest < ActionController::TestCase
   fixtures :contents, :sections, :assigned_sections, :sites
-  
-  def setup
-    @controller = FeedController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-  end
-  
+
   def test_feed_comes_from_site
     host! 'cupcake.com'
     get :feed, :sections => ['about']
@@ -51,13 +42,12 @@ class FeedControllerTest < Test::Unit::TestCase
   end
 end
 
-class AboutSectionFeedTest < ActiveSupport::TestCase
+class AboutSectionFeedTest < ActionController::TestCase
   fixtures :contents, :sections, :assigned_sections, :sites, :users, :assets, :assigned_assets
   def setup
     @controller = FeedController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-    get :feed, :sections => ['about']
+    get :feed, :sections => []
+    @contents = get_xpath '//entry/content'
   end
 
   test "should select correct records" do
@@ -85,12 +75,10 @@ class AboutSectionFeedTest < ActiveSupport::TestCase
   end
 end
 
-class HomeSectionFeedTest < ActiveSupport::TestCase
+class HomeSectionFeedTest < ActionController::TestCase
   fixtures :contents, :sections, :assigned_sections, :sites, :assets, :assigned_assets
   def setup
     @controller = FeedController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     get :feed, :sections => []
     @contents = get_xpath '//entry/content'
   end

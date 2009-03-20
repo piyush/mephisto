@@ -15,6 +15,7 @@ RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
 require File.join(File.dirname(__FILE__), '../lib/mephisto/plugin')
+require 'tzinfo'
 
 # Don't load the application when running rake db:* tasks, because doing so
 # will try to access database tables before they exist.  See
@@ -83,9 +84,8 @@ Rails::Initializer.run do |config|
   config.gem 'will_paginate', :version => '>= 2.2.2'
   config.gem 'mocha', :version => '>= 0.9.3'
   config.gem 'coderay', :version => '>= 0.8.260'
-  config.gem 'tzinfo', :version => '>= 0.3.12'
-  config.gem 'emk-safe_erb', :version => '>= 0.1.2', :lib => 'safe_erb',
-             :source => 'http://gems.github.com'
+  # config.gem 'emk-safe_erb', :version => '>= 0.1.2', :lib => 'safe_erb',
+  #            :source => 'http://gems.github.com'
 end
 
 # Don't update this file, make custom tweaks in config/initializers/custom.rb, 

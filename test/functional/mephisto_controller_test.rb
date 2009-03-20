@@ -1,16 +1,11 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-# Re-raise errors caught by the controller.
-class MephistoController; def rescue_action(e) raise e end; end
 
 class MephistoControllerTest < ActionController::TestCase
   fixtures :contents, :content_versions, :sections, :assigned_sections, :sites, :users, :tags, :taggings
 
   def setup
     prepare_theme_fixtures
-    @controller = MephistoController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
   end
 
   def test_should_list_on_home

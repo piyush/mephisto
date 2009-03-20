@@ -1,15 +1,10 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-# Use assets controller because #new is a very simple action and we just want to test the layout
-class Admin::AssetsController; def rescue_action(e) raise e end; end
 
 class Admin::AdminNavTest < ActionController::TestCase
   fixtures :sites, :users, :memberships
-
   def setup
     @controller = Admin::AssetsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     login_as :arthur
     get :new
   end
@@ -38,8 +33,6 @@ class Admin::MemberNavTest < ActionController::TestCase
 
   def setup
     @controller = Admin::AssetsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     login_as :ben
     get :new
   end
@@ -69,8 +62,6 @@ class Admin::GlobalAdminNavTest < ActionController::TestCase
   def setup
     @old        = Site.multi_sites_enabled
     @controller = Admin::AssetsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     Site.multi_sites_enabled = true
     login_as :quentin
     get :new

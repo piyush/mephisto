@@ -1,15 +1,10 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-# Re-raise errors caught by the controller.
-class Admin::SectionsController; def rescue_action(e) raise e end; end
-
 class Admin::SectionsControllerTest < ActionController::TestCase
   fixtures :sections, :users, :contents, :assigned_sections, :sites, :memberships
 
   def setup
     @controller = Admin::SectionsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     login_as :quentin
   end
 
@@ -30,7 +25,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
   end
 
   def test_should_create_blog_section
-    assert_difference Section, :count do
+    assert_difference 'Section.count' do
       xhr :post, :create, :section => { :name => 'foo', :path => '', :show_paged_articles => '0', :template => 'foo', :layout => 'bar' }
       assert_response :success
       assert             !assigns(:section).show_paged_articles?
@@ -41,7 +36,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
   end
 
   def test_should_create_paged_section
-    assert_difference Section, :count do
+    assert_difference 'Section.count' do
       xhr :post, :create, :section => { :name => 'foo', :path => '', :show_paged_articles => '1', :template => 'foo', :layout => 'bar' }
       assert_response :success
       assert assigns(:section).show_paged_articles?
@@ -51,7 +46,7 @@ class Admin::SectionsControllerTest < ActionController::TestCase
   end
 
   def test_should_create_section_with_empty_templates
-    assert_difference Section, :count do
+    assert_difference 'Section.count' do
       xhr :post, :create, :section => { :name => 'foo', :path => '', :show_paged_articles => '0', :template => '-', :layout => '-', :archive_template => '-' }
       assert_response :success
       assert             !assigns(:section).show_paged_articles?

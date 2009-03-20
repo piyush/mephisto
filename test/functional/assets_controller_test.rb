@@ -1,15 +1,10 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-# Re-raise errors caught by the controller.
-class AssetsController; def rescue_action(e) raise e end; end
 
 class AssetsControllerTest < ActionController::TestCase
   fixtures :sites
   def setup
     prepare_theme_fixtures
-    @controller = AssetsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
   end
 
   def test_routing

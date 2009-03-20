@@ -1,16 +1,11 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-# Re-raise errors caught by the controller.
-class Admin::DesignController; def rescue_action(e) raise e end; end
-
 class Admin::DesignControllerTest < ActionController::TestCase
   fixtures :users, :sections, :sites, :memberships
 
   def setup
-    prepare_theme_fixtures
     @controller = Admin::DesignController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
+    prepare_theme_fixtures
   end
 
   def test_should_allow_site_admin

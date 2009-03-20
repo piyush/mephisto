@@ -1,15 +1,10 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-# Re-raise errors caught by the controller.
-class Admin::ArticlesController; def rescue_action(e) raise e end; end
-
 class Admin::ArticlesControllerPermissionsTest < ActionController::TestCase
   fixtures :contents, :content_versions, :sections, :assigned_sections, :users, :sites, :memberships
 
   def setup
     @controller = Admin::ArticlesController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     login_as :ben
   end
 
@@ -25,7 +20,7 @@ class Admin::ArticlesControllerPermissionsTest < ActionController::TestCase
 
   def test_should_create_article
     Time.mock! Time.local(2005, 1, 1, 12, 0, 0) do
-      assert_difference Article, :count do
+      assert_difference 'Article.count' do
         post :create, :article => { :title => "My Red Hot Car", :excerpt => "Blah Blah", :body => "Blah Blah",
           'published_at(1i)' => '2005', 'published_at(2i)' => '1', 'published_at(3i)' => '1', 'published_at(4i)' => '10' }, :submit => :save
         assert_redirected_to :action => 'edit', :id => assigns(:article)
@@ -64,14 +59,14 @@ class Admin::ArticlesControllerPermissionsTest < ActionController::TestCase
   end
   
   def test_should_destroy_own_article
-    assert_difference Content, :count, -1 do
+    assert_difference 'Content.count', -1 do
       xhr :delete, :destroy, :id => contents(:site_map).id
       assert_response :success
     end
   end
   
   def test_should_not_destroy_other_article
-    assert_no_difference Content, :count do
+    assert_no_difference 'Content.count' do
       xhr :delete, :destroy, :id => contents(:welcome).id
       assert_response :redirect
     end

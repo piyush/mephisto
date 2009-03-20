@@ -40,7 +40,7 @@ class CachingTest < ActionController::IntegrationTest
     
     visit_sections_and_feeds_with visitor
 
-    assert_difference Article, :count do
+    assert_difference 'Article.count' do
       assert_expires_pages section_url_for(:home),
                            feed_url_for(:home) do
         writer.create :title => 'This is a new article & title', :body => 'this is a new article body', :sections => [sections(:home)], :published_at => 5.minutes.ago
@@ -57,7 +57,7 @@ class CachingTest < ActionController::IntegrationTest
     
     visit_sections_and_feeds_with visitor
 
-    assert_difference Article, :count do
+    assert_difference 'Article.count' do
       assert_expires_pages section_url_for(:home), section_url_for(:about),
                            feed_url_for(:home),    feed_url_for(:about) do
         writer.create :title => 'This is a new article & title', :body => 'this is a new article body', :sections => [sections(:home), sections(:about)], :published_at => Time.now
@@ -75,7 +75,7 @@ class CachingTest < ActionController::IntegrationTest
       visitor.get_with_basic 'admin/overview.xml', :login => :quentin
     end
 
-    assert_difference Article, :count do
+    assert_difference 'Article.count' do
       assert_expires_page overview_path do
         writer.create :title => 'This is a new article & title', :body => 'this is a new article body', :draft => 0
       end
@@ -196,7 +196,7 @@ class CachingTest < ActionController::IntegrationTest
   def test_should_not_cache_comment_post_on_article_with_invalid_comment
     visitor = visit_with_session
     assert_expires_pages "#{contents(:welcome).full_permalink}/comments" do
-      assert_no_difference Comment, :count do
+      assert_no_difference 'Comment.count' do
         visitor.comment_on contents(:welcome), {}
       end
     end
@@ -292,7 +292,7 @@ class CachingTest < ActionController::IntegrationTest
   def test_should_not_cache_bad_urls
     visitor = visit_with_session
     pages   = ['/about/blah', '/foo/bar', '2006/1/2/fasd']
-    assert_no_difference CachedPage, :count do
+    assert_no_difference 'CachedPage.count' do
       assert_expires_pages *pages do
         pages.each { |p| visitor.get p }
       end
@@ -472,7 +472,7 @@ class CachingTest < ActionController::IntegrationTest
     end
 
     def visit_sections_and_feeds_with(visitor)
-      assert_difference CachedPage, :count, 4 do
+      assert_difference 'CachedPage.count', 4 do
         assert_caches_page section_url_for(:home) do
           visitor.read sections(:home)
         end

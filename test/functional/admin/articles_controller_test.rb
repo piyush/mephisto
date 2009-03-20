@@ -1,15 +1,11 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-# Re-raise errors caught by the controller.
-class Admin::ArticlesController; def rescue_action(e) raise e end; end
 
-class Admin::ArticlesControllerTest < Test::Unit::TestCase
+class Admin::ArticlesControllerTest < ActionController::TestCase
   fixtures :contents, :content_versions, :sections, :assigned_sections, :users, :sites, :tags, :taggings, :memberships
 
   def setup
     @controller = Admin::ArticlesController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     login_as :quentin
   end
 
@@ -83,7 +79,7 @@ class Admin::ArticlesControllerTest < Test::Unit::TestCase
 
   def test_should_create_article
     Time.mock! Time.local(2005, 1, 1, 12, 0, 0) do
-      assert_difference Article, :count do
+      assert_difference 'Article.count' do
         post :create, :article => { :title => "My Red Hot Car", :excerpt => "Blah Blah", :body => "Blah Blah",
           'published_at(1i)' => '2005', 'published_at(2i)' => '1', 'published_at(3i)' => '1', 'published_at(4i)' => '10' }, :submit => :save
         assert_redirected_to :action => 'edit', :id => assigns(:article)
@@ -103,7 +99,7 @@ class Admin::ArticlesControllerTest < Test::Unit::TestCase
   end
   
   def test_should_show_validation_error_on_invalid_create
-    assert_no_difference Article, :count do
+    assert_no_difference 'Article.count' do
       post :create, :article => { :excerpt => "Blah Blah", :body => "Blah Blah" }, :submit => :save
       assert_response :success
       assert assigns(:article).new_record?
@@ -113,7 +109,7 @@ class Admin::ArticlesControllerTest < Test::Unit::TestCase
   end
 
   def test_should_show_correct_sections_on_invalid_create
-    assert_no_difference Article, :count do
+    assert_no_difference 'Article.count' do
       post :create, :article =>  {:excerpt => "Blah Blah", :body => "Blah Blah", :section_ids => {'2' => "true", '1' => ''}}, :submit => :save
       assert_response :success
       assert assigns(:article).new_record?
@@ -223,7 +219,7 @@ class Admin::ArticlesControllerTest < Test::Unit::TestCase
   
   def test_should_update_article_with_given_sections
     login_as :arthur
-    assert_difference AssignedSection, :count, -1 do
+    assert_difference 'AssignedSection.count', -1 do
       post :update, :id => contents(:welcome).id, :article => { :title => "My Red Hot Car", :excerpt => "Blah Blah", :body => "Blah Blah", :section_ids => [sections(:home).id] }, :submit => :save
       assert_redirected_to :action => 'edit', :id => assigns(:article).id
       assert_equal [sections(:home)], assigns(:article).sections
@@ -278,7 +274,7 @@ class Admin::ArticlesControllerTest < Test::Unit::TestCase
   end
 
   def test_should_create_article_draft
-    assert_difference Article, :count do
+    assert_difference 'Article.count' do
       post :create, :article => { :title => "My Red Hot Car", :excerpt => "Blah Blah", :body => "Blah Blah", :published_at => 5.days.ago }, :draft => '1'
       assert_nil @controller.params['published_at']
       assert_redirected_to :action => 'edit', :id => assigns(:article).id
@@ -295,7 +291,7 @@ class Admin::ArticlesControllerTest < Test::Unit::TestCase
   end
 
   def test_should_save_article_without_revision
-    assert_no_difference Article::Version, :count do
+    assert_no_difference 'Article::Version.count' do
       post :update, :id => contents(:welcome).id, :article => { :title => 'Foo' }, :commit => 'Save without Revision'
     end
   end

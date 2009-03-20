@@ -1,16 +1,11 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-# Re-raise errors caught by the controller.
-class Admin::SettingsController; def rescue_action(e) raise e end; end
 
-class Admin::SettingsControllerTest < Test::Unit::TestCase
+class Admin::SettingsControllerTest < ActionController::TestCase
   fixtures :sites, :users, :memberships
   def setup
-    @controller = Admin::SettingsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
+    @controller = Admin::SectionsController.new
   end
-
   def test_should_show_settings
     login_as :quentin
     get :index

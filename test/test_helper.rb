@@ -3,7 +3,7 @@ ENV['TZ'] = 'US/Central'
 
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
-require 'webrat/rails'
+require 'webrat'
 require 'ruby-debug'
 require 'machinist'
 require 'tzinfo'

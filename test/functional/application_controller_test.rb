@@ -14,8 +14,6 @@ class ApplicationControllerTest < ActionController::TestCase
     @sub   = Site.create!(:title => 'sub', :host => 'sub.test.host')
     @uk    = Site.create!(:title => 'sub', :host => 'sub.test.co.uk')
     @controller = AccountController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
   end
   
   def teardown

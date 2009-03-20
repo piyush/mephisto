@@ -1,15 +1,11 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-# Re-raise errors caught by the controller.
-class Admin::AssetsController; def rescue_action(e) raise e end; end
 
 class Admin::AssetsControllerPermissionsTest < ActionController::TestCase
   fixtures :sites, :assets, :users, :contents, :memberships
 
   def setup
     @controller = Admin::AssetsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     login_as :ben
   end
 
@@ -22,8 +18,8 @@ class Admin::AssetsControllerPermissionsTest < ActionController::TestCase
   def test_should_upload_and_create_asset_records
     asset_count = has_image_processor? ? 3 : 1 # asset + 2 thumbnails
     
-    assert_difference sites(:first).assets, :count do
-      assert_difference Asset, :count, asset_count do
+    assert_difference 'sites(:first).assets.count' do
+      assert_difference 'Asset.count', asset_count do
         process_upload ['logo.png']
         assert_equal users(:ben).id, assigns(:assets).first.user_id
         assert_equal 'logo.png', assigns(:assets).first.title
@@ -53,14 +49,14 @@ class Admin::AssetsControllerPermissionsTest < ActionController::TestCase
   end
 
   def test_should_not_delete_other_users_assets
-    assert_no_difference Asset, :count do
+    assert_no_difference 'Asset.count' do
       delete :destroy, :id => assets(:swf).id
       assert_redirected_to :controller => '/account', :action => 'login'
     end
   end
 
   def test_should_delete_asset
-    assert_difference Asset, :count, -1 do
+    assert_difference 'Asset.count', -1 do
       delete :destroy, :id => assets(:gif).id
     end
   

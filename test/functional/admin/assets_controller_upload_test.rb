@@ -1,16 +1,11 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-# Re-raise errors caught by the controller.
-class Admin::AssetsController; def rescue_action(e) raise e end; end
-
 # special test suite that clears the assets table and assets
-class Admin::AssetsControllerUploadTest < Test::Unit::TestCase
+class Admin::AssetsControllerUploadTest < ActionController::TestCase
   fixtures :sites, :users, :assets
 
   def setup
     @controller = Admin::AssetsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     login_as :quentin
     Asset.delete_all
   end
@@ -18,8 +13,8 @@ class Admin::AssetsControllerUploadTest < Test::Unit::TestCase
   def test_should_sort_assets
     assets_per_creation = has_image_processor? ? 3 : 1
     created = []
-    assert_difference sites(:first).assets, :count, 21 do
-      assert_difference Asset, :count, 21 * assets_per_creation do
+    assert_difference 'sites(:first).assets.count', 21 do
+      assert_difference 'Asset.count', 21 * assets_per_creation do
         t = 5.months.ago.utc
         21.times do |i|
           Time.mock! t + i.days do
@@ -51,7 +46,7 @@ class Admin::AssetsControllerUploadTest < Test::Unit::TestCase
     process_upload [upload_file]
     post :update, :id => Asset.find_by_filename(upload_file).id, :asset => { :title => 'foo bar' }
     assert_redirected_to assets_path
-    assert_valid assigns(:asset)
+    assert assigns(:asset).valid?
     assert_equal 'foo bar', assigns(:asset).title
   end
 

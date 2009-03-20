@@ -1,16 +1,11 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-# Re-raise errors caught by the controller.
-class Admin::UsersController; def rescue_action(e) raise e end; end
 
-class Admin::UsersControllerTest < Test::Unit::TestCase
+class Admin::UsersControllerTest < ActionController::TestCase
   fixtures :users, :sites, :memberships, :contents
   def setup
     @controller = Admin::UsersController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
   end
-
   def test_should_allow_site_admin
     login_as :arthur
     get :index
@@ -37,8 +32,8 @@ class Admin::UsersControllerTest < Test::Unit::TestCase
 
   def test_should_create_user
     login_as :quentin
-    assert_difference User, :count do
-      assert_difference Membership, :count do
+    assert_difference 'User.count' do
+      assert_difference 'Membership.count' do
         post :create, :user => { :login => 'bob', :email => 'foo@example.com', :password => 'testy', :password_confirmation => 'testy' }
         assert_models_equal [sites(:first)], assigns(:user).sites
         assert_equal assigns(:user), User.authenticate_for(sites(:first), 'bob', 'testy')
@@ -160,7 +155,7 @@ class Admin::UsersControllerTest < Test::Unit::TestCase
 
   def test_should_not_disable_as_site_member
     login_as :arthur, :hostess
-    assert_no_difference User, :count do
+    assert_no_difference 'User.count' do
       xhr :post, :destroy, :id => users(:arthur).id
       assert_redirected_to :controller => '/account', :action => 'login'
     end
@@ -208,8 +203,8 @@ class Admin::UsersControllerTest < Test::Unit::TestCase
 
   def test_should_disable_user
     login_as :quentin
-    assert_no_difference User, :count_with_deleted do
-      assert_difference User, :count, -1 do
+    assert_no_difference 'User.count_with_deleted' do
+      assert_difference 'User.count', -1 do
         xhr :post, :destroy, :id => users(:arthur).id
         assert_response :success
         assert_match /Flash\.notice/, @response.body
@@ -221,8 +216,8 @@ class Admin::UsersControllerTest < Test::Unit::TestCase
 
   def test_should_not_disable_admin
     login_as :arthur
-    assert_no_difference User, :count_with_deleted do
-      assert_no_difference User, :count do
+    assert_no_difference 'User.count_with_deleted' do
+      assert_no_difference 'User.count' do
         xhr :post, :destroy, :id => users(:quentin).id
         assert_response :success
         assert_match /Flash\.errors/, @response.body
@@ -232,8 +227,8 @@ class Admin::UsersControllerTest < Test::Unit::TestCase
   
   def test_should_not_disable_self
     login_as :arthur
-    assert_no_difference User, :count_with_deleted do
-      assert_no_difference User, :count do
+    assert_no_difference 'User.count_with_deleted' do
+      assert_no_difference 'User.count' do
         xhr :post, :destroy, :id => users(:arthur).id
         assert_response :success
         assert_match /Flash\.errors/, @response.body
@@ -243,8 +238,8 @@ class Admin::UsersControllerTest < Test::Unit::TestCase
 
   def test_should_enable_user
     login_as :quentin
-    assert_no_difference User, :count_with_deleted do
-      assert_difference User, :count do
+    assert_no_difference 'User.count_with_deleted' do
+      assert_difference 'User.count' do
         xhr :post, :enable, :id => 3
         assert_response :success
       end

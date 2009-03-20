@@ -1,15 +1,10 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-# Re-raise errors caught by the controller.
-class AccountController; def rescue_action(e) raise e end; end
-
 class AccountControllerLoginTest < ActionController::TestCase
   fixtures :users, :sites, :memberships
 
   def setup
     @controller = AccountController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
   end
 
   test "should have routes for all actions" do
@@ -70,8 +65,6 @@ class AccountControllerCookieTest < ActionController::TestCase
 
   def setup
     @controller = AccountController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
   end
 
   test "should remember me" do
@@ -129,14 +122,12 @@ class AccountControllerPasswordResetTest < ActionController::TestCase
 
   def setup
     @controller = AccountController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     @emails = ActionMailer::Base.deliveries 
     @emails.clear
   end
 
   test "should ignore reset attempt using GET" do
-    assert_no_difference @emails, :size do
+    assert_no_difference '@emails.size' do
       get :forget
     end
     assert_redirected_to :action => 'index'
@@ -145,7 +136,7 @@ class AccountControllerPasswordResetTest < ActionController::TestCase
   end
 
   test "should ignore reset attempt with missing email" do
-    assert_no_difference @emails, :size do
+    assert_no_difference '@emails.size' do
       post :forget
     end
     assert_redirected_to :action => 'login'
@@ -154,7 +145,7 @@ class AccountControllerPasswordResetTest < ActionController::TestCase
   end
 
   test "should ignore reset attempt with bad email" do
-    assert_no_difference @emails, :size do
+    assert_no_difference '@emails.size' do
       post :forget, :email => 'foobar'
     end
     assert_redirected_to :action => 'login'
@@ -164,7 +155,7 @@ class AccountControllerPasswordResetTest < ActionController::TestCase
   
   test "should send user token by email on good email" do
     old_token = users(:quentin).token
-    assert_difference @emails, :size do
+    assert_difference '@emails.size' do
       post :forget, :email => users(:quentin).email
     end
     
