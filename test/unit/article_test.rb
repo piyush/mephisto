@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class ArticleTest < Test::Unit::TestCase
+class ArticleTest < ActiveSupport::TestCase
   fixtures :contents, :users, :sections, :sites, :assigned_sections
 
   def test_find_next
@@ -92,7 +92,7 @@ class ArticleTest < Test::Unit::TestCase
   end
 
   def test_should_create_article_version
-    assert_difference Article::Version, :count, 2 do
+    assert_difference 'Article::Version.count', 2 do
       Article.create :title => 'This IS a Tripped out title!!!1  (well not really)', :body => 'foo', :user_id => 1, :site_id => 1
       contents(:welcome).update_attributes :title => 'whoo!'
     end
@@ -138,7 +138,7 @@ class ArticleTest < Test::Unit::TestCase
 
   def test_should_set_tags
     assert_equal '', contents(:welcome).tag
-    assert_difference Tagging, :count, 2 do
+    assert_difference 'Tagging.count', 2 do
       contents(:welcome).update_attribute :tag, 'ruby, rails'
     end
     assert_equal 'rails, ruby', contents(:welcome).reload.tag
@@ -146,9 +146,9 @@ class ArticleTest < Test::Unit::TestCase
 
   def test_should_set_tags_upon_article_creation
     a = nil
-    assert_difference Tagging, :count, 2 do
+    assert_difference 'Tagging.count', 2 do
       a = create_article :tag => 'ruby, rails', :body => 'foo'
-      assert_valid a
+      assert a.valid?
     end
     assert_equal 'rails, ruby', a.reload.tag
   end
@@ -181,7 +181,7 @@ class ArticleTest < Test::Unit::TestCase
     end
 end
 
-class ArticleFilterEditTest < Test::Unit::TestCase
+class ArticleFilterEditTest < ActiveSupport::TestCase
   fixtures :contents, :users, :sections, :sites
 
   def setup

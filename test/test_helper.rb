@@ -6,6 +6,7 @@ require 'test_help'
 require 'webrat/rails'
 require 'ruby-debug'
 require 'machinist'
+require 'tzinfo'
 require File.join(File.dirname(__FILE__), '..', 'spec', 'blueprints')
 require File.expand_path(File.dirname(__FILE__) + "/actor")
 ASSET_PATH = File.join(RAILS_ROOT, 'test/fixtures/tmp/assets') unless Object.const_defined?(:ASSET_PATH)
@@ -64,7 +65,7 @@ Mephisto::Routing.redirect \
   '/sanitize/path'            => 'foo://bar',
   'redirect/external'         => 'http://external/$1/$2'
 
-class Test::Unit::TestCase
+class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
 
@@ -188,15 +189,15 @@ class Test::Unit::TestCase
     end
   end
 
-  def assert_difference(object, method = nil, difference = 1)
-    initial_value = object.send(method)
-    yield
-    assert_equal initial_value + difference, object.send(method), "#{object}##{method}"
-  end
-
-  def assert_no_difference(object, method, &block)
-    assert_difference object, method, 0, &block
-  end
+  # def assert_difference(object, method = nil, difference = 1)
+  #   initial_value = object.send(method)
+  #   yield
+  #   assert_equal initial_value + difference, object.send(method), "#{object}##{method}"
+  # end
+  # 
+  # def assert_no_difference(object, method, &block)
+  #   assert_difference object, method, 0, &block
+  # end
 
   def login_with_cookie_as(user)
     @request.cookies['user'] = user ? CGI::Cookie.new( 

@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class CommentDropTest < Test::Unit::TestCase
+class CommentDropTest < ActiveSupport::TestCase
   fixtures :contents, :sites
   
   def setup
@@ -46,7 +46,7 @@ class CommentDropTest < Test::Unit::TestCase
 
   def test_should_show_filtered_text
     comment  = contents(:welcome).comments.create :body => '*test* comment', :author => 'bob', :author_ip => '127.0.0.1'
-    assert_valid comment
+    assert comment.valid?
     assert_equal 'textile_filter', comment.filter
     liquid   = comment.to_liquid
     assert_equal '<p><strong>test</strong> comment</p>', liquid.before_method(:body)

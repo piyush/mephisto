@@ -8,8 +8,8 @@ class AssetTaggingTest < ActiveSupport::TestCase
   end
 
   test "should add tags" do
-    assert_difference Tagging, :count do
-      assert_no_difference Tag, :count do
+    assert_difference 'Tagging.count' do
+      assert_no_difference 'Tag.count' do
         Tagging.add_to assets(:gif), [tags(:rails)]
       end
     end
@@ -17,8 +17,8 @@ class AssetTaggingTest < ActiveSupport::TestCase
   end
 
   test "should delete tags" do
-    assert_difference Tagging, :count, -1 do
-      assert_no_difference Tag, :count do
+    assert_difference 'Tagging.count', -1 do
+      assert_no_difference 'Tag.count' do
         Tagging.delete_from assets(:gif), [tags(:ruby)]
       end
     end
@@ -26,8 +26,8 @@ class AssetTaggingTest < ActiveSupport::TestCase
   end
 
   test "should change tags" do
-    assert_difference Tagging, :count, 2 do
-      assert_difference Tag, :count do
+    assert_difference 'Tagging.count', 2 do
+      assert_difference 'Tag.count' do
         Tagging.set_on assets(:gif), 'rails, mongrel, foo'
       end
     end
@@ -47,8 +47,8 @@ class ArticleTaggingTest < ActiveSupport::TestCase
   end
 
   test "should add tags" do
-    assert_difference Tagging, :count do
-      assert_no_difference Tag, :count do
+    assert_difference 'Tagging.count' do
+      assert_no_difference 'Tag.count' do
         Tagging.add_to contents(:another), [tags(:ruby)]
       end
     end
@@ -56,8 +56,8 @@ class ArticleTaggingTest < ActiveSupport::TestCase
   end
 
   test "should delete tags" do
-    assert_difference Tagging, :count, -1 do
-      assert_no_difference Tag, :count do
+    assert_difference 'Tagging.count', -1 do
+      assert_no_difference 'Tag.count' do
         Tagging.delete_from contents(:another), [tags(:rails)]
       end
     end
@@ -65,8 +65,8 @@ class ArticleTaggingTest < ActiveSupport::TestCase
   end
 
   test "should change tags" do
-    assert_difference Tagging, :count, 2 do
-      assert_difference Tag, :count do
+    assert_difference 'Tagging.count', 2 do
+      assert_difference 'Tag.count' do
         Tagging.set_on contents(:another), 'ruby, mongrel, foo'
       end
     end

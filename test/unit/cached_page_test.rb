@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class CachedPageTest < Test::Unit::TestCase
+class CachedPageTest < ActiveSupport::TestCase
   fixtures :contents, :sites, :cached_pages
   
   def test_should_find_by_references
@@ -16,10 +16,10 @@ class CachedPageTest < Test::Unit::TestCase
   end
   
   def test_should_create_cached_page
-    assert_difference CachedPage, :count do
-      assert_difference sites(:first).cached_pages, :count do
+    assert_difference 'CachedPage.count' do
+      assert_difference 'sites(:first).cached_pages.count' do
         page = CachedPage.create_by_url(sites(:first), '/blah', [contents(:welcome)])
-        assert_valid page
+        assert page.valid?
         assert_equal '/blah', page.url
         assert_equal "[1:Article]", page.references
       end
@@ -27,10 +27,10 @@ class CachedPageTest < Test::Unit::TestCase
   end
   
   def test_should_create_cached_page_from_existing_record
-    assert_no_difference CachedPage, :count do
-      assert_no_difference sites(:first).cached_pages, :count do
+    assert_no_difference 'CachedPage.count' do
+      assert_no_difference 'sites(:first).cached_pages.count' do
         page = CachedPage.create_by_url(sites(:first), '/bar', [contents(:welcome)])
-        assert_valid page
+        assert page.valid?
         assert_equal '/bar', page.url
         assert_equal "[1:Article]", page.references
         assert_equal cached_pages(:first_cleared), page
@@ -40,8 +40,8 @@ class CachedPageTest < Test::Unit::TestCase
   end
   
   def test_should_expire_sites
-    assert_no_difference CachedPage, :count do
-      assert_no_difference sites(:first).cached_pages, :count do
+    assert_no_difference 'CachedPage.count' do
+      assert_no_difference 'sites(:first).cached_pages.count' do
         CachedPage.expire_pages(sites(:first), [cached_pages(:first)])
         assert_not_nil cached_pages(:first).reload.cleared_at
       end

@@ -4,14 +4,14 @@ class SiteTest < ActiveSupport::TestCase
 
   test "should create site without accepting comments" do
     site = Site.new :host => 'foo.com', :comment_age => -1
-    assert_valid site
+    assert site.valid?
     assert !site.accept_comments?
     assert !site.approve_comments?
   end
 
   test "should create site with approving comments" do
     site = Site.new :host => 'foo.com', :approve_comments => true
-    assert_valid site
+    assert site.valid?
     assert site.accept_comments?
     assert site.approve_comments?
   end
@@ -33,8 +33,8 @@ class SiteTest < ActiveSupport::TestCase
 
   test "should create and destroy site with default home section" do
     site = nil
-    assert_difference Site, :count do
-      assert_difference Section, :count do
+    assert_difference 'Site.count' do
+      assert_difference 'Section.count' do
         site = Site.create! :host => 'foo.com'
       end
     end
@@ -111,7 +111,7 @@ end
 class DefaultSiteOptionsTest < ActiveSupport::TestCase
   def setup
     @site = Site.new :host => 'foo.com'
-    assert_valid @site
+    assert @site.valid?
   end
 
   test "should accept comments by default" do
@@ -140,12 +140,12 @@ class SiteValidationsTest < ActiveSupport::TestCase
 
   def setup
     @site = Site.new :host => 'foo.com'
-    assert_valid @site
+    assert @site.valid?
   end
 
   test "should validate unique host" do
-    assert_valid sites(:first)
-    assert_no_difference Site, :count do
+    assert sites(:first).valid?
+    assert_no_difference 'Site.count' do
       assert Site.create(:host => sites(:first).host.upcase, :title => 'Copy').new_record?
     end
   end
@@ -167,7 +167,7 @@ class SiteValidationsTest < ActiveSupport::TestCase
   
   test "should downcase search path" do
     @site.search_path = "SEARCHES"
-    assert_valid @site
+    assert @site.valid?
     assert_equal 'searches', @site.search_path
   end
   
@@ -179,13 +179,13 @@ class SiteValidationsTest < ActiveSupport::TestCase
   
   test "should downcase tag path" do
     @site.tag_path = "TAGGING"
-    assert_valid @site
+    assert @site.valid?
     assert_equal 'tagging', @site.tag_path
   end
   
   test "should downcase permalink style" do
     @site.permalink_style = 'ARTICLE/:ID'
-    assert_valid @site
+    assert @site.valid?
     assert_equal 'article/:id', @site.permalink_style
   end
 end

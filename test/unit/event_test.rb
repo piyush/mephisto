@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class EventTest < Test::Unit::TestCase
+class EventTest < ActiveSupport::TestCase
   fixtures :events, :contents, :users, :sites
 
   def setup
@@ -15,7 +15,7 @@ class EventTest < Test::Unit::TestCase
   end
 
   def test_should_create_edit_article_event
-    assert_difference Event, :count do
+    assert_difference 'Event.count' do
       assert_event_created_for :welcome, 'edit' do |article|
         article.update_attributes :title => 'foo', :body => 'bar', :updater => users(:quentin), :filter => 'markdown_filter'
       end
@@ -49,7 +49,7 @@ class EventTest < Test::Unit::TestCase
   end
 
   def test_should_delete_event_when_deleting_comment
-    assert_difference Event, :count, -1 do
+    assert_difference 'Event.count', -1 do
       contents(:unwelcome_comment).destroy
     end
   end

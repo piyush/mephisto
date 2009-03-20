@@ -1,13 +1,13 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class AssetTest < Test::Unit::TestCase
+class AssetTest < ActiveSupport::TestCase
   fixtures :sites, :assets, :tags, :taggings
 
   def test_should_upload_and_create_asset_records
     asset_count = has_image_processor? ? 3 : 1 # asset + 2 thumbnails
     
-    assert_difference sites(:first).assets, :count do
-      assert_difference Asset, :count, asset_count do 
+    assert_difference 'sites(:first).assets.count' do
+      assert_difference 'Asset.count', asset_count do 
         process_upload
         
         if has_image_processor?
@@ -152,7 +152,7 @@ class AssetTest < Test::Unit::TestCase
 
   def test_should_set_tags
     assert_equal 'ruby', assets(:gif).tag
-    assert_difference Tagging, :count do
+    assert_difference 'Tagging.count' do
       assets(:gif).update_attribute :tag, 'ruby, rails'
     end
     assert_equal 'rails, ruby', assets(:gif).reload.tag
@@ -160,7 +160,7 @@ class AssetTest < Test::Unit::TestCase
 
   def test_should_set_tags_upon_asset_creation
     a = nil
-    assert_difference Tagging, :count, 2 do
+    assert_difference 'Tagging.count', 2 do
       a = process_upload :tag => 'ruby, rails'
     end
     assert_equal 'rails, ruby', a.reload.tag

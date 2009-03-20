@@ -4,11 +4,11 @@ class SectionTest < ActiveSupport::TestCase
   fixtures :sections, :contents, :assigned_sections, :sites, :users
 
   def test_find_or_create_sanity_check
-    assert_no_difference Section, :count do
+    assert_no_difference 'Section.count' do
       assert_equal sections(:home), sites(:first).sections.find_or_create_by_path('')
     end
     
-    assert_difference Section, :count do 
+    assert_difference 'Section.count' do 
       section = sites(:first).sections.create(:name => 'Foo', :path => '')
       assert_equal sites(:first), section.site
       assert_equal 'foo', section.path
@@ -20,7 +20,7 @@ class SectionTest < ActiveSupport::TestCase
   end
 
   def test_should_not_allow_nil_path
-    assert_valid sections(:home)
+    assert sections(:home).valid?
     sections(:home).path = nil
     assert !sections(:home).valid?
     assert sections(:home).errors.on(:path)
@@ -28,7 +28,7 @@ class SectionTest < ActiveSupport::TestCase
 
   def test_should_create_path
     s = Section.new :site => sites(:first), :name => 'This IS a Tripped out title!!!1  (well/ not. really)', :path => ''
-    assert_valid s
+    assert s.valid?
     assert_equal 'this-is-a-tripped-out-title-1-well/-not-really', s.path
   end
 
